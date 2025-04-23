@@ -1,14 +1,14 @@
-# Azure Resource Group that contains most resources
-resource "azurerm_resource_group" "rg" {
-  name     = "${var.resource_group_name}-${var.serial_number}"
-  location = var.location
-}
-
 data "azuread_client_config" "current" {}
 data "azurerm_client_config" "current" {}
 
 locals {
   name = var.prefix_override != null ? var.prefix_override : replace(lower(var.app_name), " ", "-")
+}
+
+# Azure Resource Group that contains most resources
+resource "azurerm_resource_group" "rg" {
+  name     = "${var.resource_group_name}-${var.serial_number}"
+  location = var.location
 }
 
 resource "azurerm_log_analytics_workspace" "monitor_law" {
@@ -47,7 +47,6 @@ module "networking" {
   firewall            = var.firewall
   vnet                = var.vnet
 }
-
 
 module "container" {
   source                      = "./modules/container"
