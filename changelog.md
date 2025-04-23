@@ -2,3 +2,4 @@
 - Use of the ~> operator on versions to only allow incrementing in the right most component of a version can be used to help avoid major upgrades occuring (major versions have more impacting changes), such as the day where Hashicorp releases AzureRM version 5 series modules (currently version 4).  Ensure that provider versions follow this to manage major release upgrades. [Best Practices for Provider Versions](https://developer.hashicorp.com/terraform/language/providers/requirements#best-practices-for-provider-versions)
 - The property `enable_https_traffic_only` has been superseded by `https_traffic_only_enabled` and will be removed in v4.0 of the AzureRM Provider.
 - Upgrade AzureRM Provider from 3.x to 4.x (3.98 to 4.26)
+- Upgrade AzureAD Provider from 2.x to 3.x (2.47 to 3.3)
