@@ -11,10 +11,67 @@
 Todo
 
 - Incorporate PowerBI changes
-- Establish Terraform mv (Move) commands needed to change between versions.
 - Azure Gov AzureRM Provider environment setting
 - Is Azure Gov local variables vs provider?
 - Attributes for AzureRM 4 resources
 - Consider repetative api calls due to multiple data current scope resources
 - Consider buildout of parameters (consumption of Azure Verified Modules?)
+
+
+
+
+
+terraform state mv module.scuba_connect.azurerm_resource_group.rg azurerm_resource_group.rg
+
+terraform state mv module.scuba_connect.module.app.azuread_application.app[0] module.app.azuread_application.app 
+
+terraform state mv module.scuba_connect.module.app.azuread_application_certificate.app_cert[0] module.app.azuread_application_certificate.app_cert[0]
+
+terraform state mv module.scuba_connect.module.app.azuread_service_principal.app[0] module.app.azuread_service_principal.app[0]
+
+terraform state mv module.scuba_connect.module.app.azurerm_key_vault.vault module.app.azurerm_key_vault.vault
+
+terraform state mv module.scuba_connect.module.app.azurerm_key_vault_certificate.cert module.app.azurerm_key_vault_certificate.cert 
+
+terraform state mv module.scuba_connect.module.app.local_file.scuba_pem_file module.app.local_file.scuba_pem_file
+
+terraform state mv module.scuba_connect.module.app.time_rotating.cert_rotation module.app.time_rotating.cert_rotation
+
+terraform state mv module.scuba_connect.module.container.azurerm_automation_account.runner_aa module.container.azurerm_automation_account.runner_aa
+
+terraform state mv module.scuba_connect.module.container.azurerm_automation_job_schedule.runner_job_schedule module.container.azurerm_automation_job_schedule.runner_job_schedule
+
+terraform state mv module.scuba_connect.module.container.azurerm_automation_runbook.runner_book module.container.azurerm_automation_runbook.runner_book
+
+terraform state mv module.scuba_connect.module.container.azurerm_automation_schedule.runner_schedule module.container.azurerm_automation_schedule.runner_schedule 
+
+terraform state mv module.scuba_connect.module.container.azurerm_log_analytics_saved_search.container_search module.container.azurerm_log_analytics_saved_search.container_search
+
+terraform state mv module.scuba_connect.module.container.azurerm_log_analytics_saved_search.last_run_search module.container.azurerm_log_analytics_saved_search.last_run_search
+
+terraform state mv module.scuba_connect.module.container.azurerm_monitor_action_group.action_group module.container.azurerm_monitor_action_group.action_group
+
+terraform state mv module.scuba_connect.module.container.azurerm_monitor_scheduled_query_rules_alert_v2.exit_alert module.container.azurerm_monitor_scheduled_query_rules_alert_v2.exit_alert
+
+terraform state mv module.scuba_connect.module.container.azurerm_role_assignment.aa_system_id module.container.azurerm_role_assignment.aa_system_id
+
+terraform state mv module.scuba_connect.module.container.azurerm_role_assignment.app_storage_role[0] module.container.azurerm_role_assignment.app_storage_role
+
+terraform state mv module.scuba_connect.module.container.azurerm_role_assignment.law_access module.container.azurerm_role_assignment.law_access
+
+terraform state mv module.scuba_connect.module.container.azurerm_role_definition.start_container_role module.container.azurerm_role_definition.start_container_role
+
+terraform state mv module.scuba_connect.module.container.azurerm_storage_account.storage[0] module.container.azurerm_storage_account.storage[0]
+
+terraform state mv module.scuba_connect.module.container.azurerm_storage_container.input[0] module.container.azurerm_storage_container.input[0]
+
+terraform state mv module.scuba_connect.module.container.azurerm_storage_container.output[0] module.container.azurerm_storage_container.output[0]
+
+terraform state mv module.scuba_connect.azurerm_log_analytics_workspace.monitor_law azurerm_log_analytics_workspace.monitor_law
+
+terraform state mv 'module.scuba_connect.module.container.azurerm_container_group.aci["adhoc"]' 'module.container.azurerm_container_group.aci["adhoc"]'
+
+terraform state mv 'module.scuba_connect.module.container.azurerm_container_group.aci["scheduled"]' 'module.container.azurerm_container_group.aci["scheduled"]'
+
+# terraform state mv module.scuba_connect.module.container.azurerm_storage_blob.tenants["myorg.onmicrosoft.com.yaml"] 
 
