@@ -12,7 +12,7 @@ variable "resource_group_name" {
 
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs#environment-1
 variable "environment" {
-  description = "The environment can be set to 'public' for the global Azure cloud, or 'usgovernment' for the US Government cloud."
+  description = "The environment can be set to 'public' for the global Azure cloud, or 'usgovernment' for the Azure US Government cloud."
   type        = string
   default     = "public"
   validation {

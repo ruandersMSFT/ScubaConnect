@@ -80,6 +80,7 @@ For a typical deployment, set `contact_emails` and `resource_group_name` then re
 
 Required::
 `contact_emails` (string) ::: Emails to notify for alerts and before certificate expiry
+`environment` (string) [default=public]::: Resource group to create and build resources in
 `resource_group_name` (string) ::: Resource group to create and build resources in
 Optional::
 `location` (string) [default=East US]::: Azure region to create resources in.
