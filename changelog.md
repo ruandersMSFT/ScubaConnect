@@ -19,7 +19,7 @@ Todo
 - Consider repetative api calls due to multiple data current scope resources
 - Consider buildout of parameters (consumption of Azure Verified Modules?)
 - Consider standard sku KeyVault (not hsm backed)
-
+- Consider NSG Deny rule is only denying TCP, but not UDP.
 
 
 
