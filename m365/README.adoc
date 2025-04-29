@@ -82,7 +82,7 @@ Required::
 `contact_emails` (string) ::: Emails to notify for alerts and before certificate expiry
 `resource_group_name` (string) ::: Resource group to create and build resources in
 Optional::
-`location` (string) [default=East US]::: Region to build resources in
+`location` (string) [default=East US]::: Azure region to create resources in.
 `schedule_interval` (string) [default=Week]::: The interval to run the scheduled job on.
 `app_name` (string) [default=ScubaConnect]::: App name. Displayed in Azure console on installed tenants
 `app_multi_tenant` (bool) [default=False]::: If true, the app will be able to be installed in multiple tenants. By default, it is only available in this tenant

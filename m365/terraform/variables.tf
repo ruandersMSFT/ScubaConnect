@@ -27,7 +27,7 @@ variable "environment" {
 variable "location" {
   default     = "East US"
   type        = string
-  description = "Region to build resources in"
+  description = "Azure region to create resources in. Defaults to 'East US'."
 }
 
 variable "schedule_interval" {
