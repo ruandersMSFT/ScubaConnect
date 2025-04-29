@@ -16,6 +16,7 @@ Todo
 - Attributes for AzureRM 4 resources
 - Consider repetative api calls due to multiple data current scope resources
 - Consider buildout of parameters (consumption of Azure Verified Modules?)
+- Consider standard sku KeyVault (not hsm backed)
 
 
 
