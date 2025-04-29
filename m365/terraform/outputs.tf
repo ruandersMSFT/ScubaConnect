@@ -10,7 +10,7 @@ output "output_storage_container_id" {
 
 output "input_storage_container_id" {
   description = "ID of the input storage account configs are read from"
-  value       = module.container.output_storage_container_id
+  value       = module.container.input_storage_container_id
 }
 
 output "sp_object_id" {
