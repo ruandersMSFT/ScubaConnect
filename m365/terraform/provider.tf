@@ -16,6 +16,7 @@ terraform {
 
 provider "azurerm" {
   features {}
+  subscription_id = "<YOUR_SUBSCRIPTION_UUID>"
 }
 
 provider "azuread" {
