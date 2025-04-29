@@ -13,6 +13,7 @@ resource "azurerm_storage_account" "storage" {
   account_tier                      = "Standard"
   account_replication_type          = "GZRS"
   account_kind                      = "StorageV2"
+  cross_tenant_replication_enabled  = false
   infrastructure_encryption_enabled = true
   https_traffic_only_enabled        = true # default
   allow_nested_items_to_be_public   = false
