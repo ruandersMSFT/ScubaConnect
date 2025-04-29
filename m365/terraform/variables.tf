@@ -10,6 +10,18 @@ variable "resource_group_name" {
   description = "Resource group to create and build resources in"
 }
 
+# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs#environment-1
+variable "environment" {
+  description = "The environment can be set to 'public' for the global Azure cloud, or 'usgovernment' for the US Government cloud."
+  type        = string
+  default     = "public"
+  validation {
+    condition     = contains(["public", "usgovernment"], var.environment)
+    error_message = "Environment must be either 'public' or 'usgovernment'."
+  }
+}
+
+
 ### OPTIONAL ###
 
 variable "location" {
@@ -121,7 +133,7 @@ variable "container_registry" {
     username = string
     password = string
   })
-  default = null
+  default     = null
   description = "Credentials for logging into registry with container image"
 }
 

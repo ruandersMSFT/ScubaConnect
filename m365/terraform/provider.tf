@@ -16,6 +16,13 @@ terraform {
 
 provider "azurerm" {
   features {}
+
+  # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs#environment-1
+  # The environment can be set to "public" for the global Azure cloud, or "usgovernment" for the US Government cloud. This can also be sourced from the ARM_ENVIRONMENT Environment Variable.
+  environment = "public"
+
+  # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs#subscription_id-1
+  # The subscription_id is the unique identifier for your Azure subscription. This can also be sourced from the ARM_SUBSCRIPTION_ID Environment Variable.
   subscription_id = "070cfebd-3e63-42a5-ba50-58de1db7496e" # "<YOUR_SUBSCRIPTION_UUID>"
 }
 
