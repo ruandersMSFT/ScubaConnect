@@ -31,7 +31,7 @@ terraform state mv module.scuba_connect.module.app.azuread_application_certifica
 
 terraform state mv module.scuba_connect.module.app.azuread_service_principal.app[0] module.app.azuread_service_principal.app[0]
 
-terraform state mv module.scuba_connect.module.app.azurerm_key_vault.vault module.app.azurerm_key_vault.vault
+terraform state mv module.scuba_connect.module.app.azurerm_key_vault.vault module.app.module.key_vault.azurerm_key_vault.this
 
 terraform state mv module.scuba_connect.module.app.azurerm_key_vault_certificate.cert module.app.azurerm_key_vault_certificate.cert 
 
@@ -77,4 +77,7 @@ terraform state mv 'module.scuba_connect.module.container.azurerm_container_grou
 
 terraform state mv 'module.scuba_connect.module.container.azurerm_storage_blob.tenants["myorg.onmicrosoft.com.yaml"]' 'module.container.azurerm_storage_blob.tenants["myorg.onmicrosoft.com.yaml"]'
 
-terraform import -var-file='variables.tfvars' module.app.azurerm_key_vault_certificate_contacts.contact 'https://scubaruanders-kv-d3503fa.vault.azure.net/certificates/contacts'
+terraform import -var-file='example.tfvars' module.app.azurerm_key_vault_certificate_contacts.contact 'https://scubaruanders-kv-d3503fa.vault.azure.net/certificates/contacts'
+
+terraform import -var-file='example.tfvars' 'module.app.module.key_vault.azurerm_key_vault_access_policy.this["app"]' '/subscriptions/070cfebd-3e63-42a5-ba50-58de1db7496e/resourceGroups/myresourcegroup-01/providers/Microsoft.KeyVault/vaults/scubaruanders-kv-d3503fa/objectId/75a159ce-bab1-4f4e-aade-d9545f994a03'
+

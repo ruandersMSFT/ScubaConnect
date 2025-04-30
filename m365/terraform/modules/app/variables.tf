@@ -34,7 +34,7 @@ variable "resource_group" {
 
 variable "contact_emails" {
   description = "Emails to notify before certificate expiry"
-  type = list(
+  type = map(
     object(
       {
         email = string
@@ -74,6 +74,18 @@ variable "app_multi_tenant" {
 variable "allowed_access_ips" {
   type        = list(string)
   description = "List of IP addresses/subnets in CIDR format that should be able to access keyvault"
+  default     = null
+}
+
+variable "key_vault_sku_name" {
+  type        = string
+  description = "Key Vault SKU name. Default is standard"
+  default     = "standard"
+}
+
+variable "key_vault_soft_delete_retention_days" {
+  type        = number
+  description = "Key Vault soft delete retention days."
   default     = null
 }
 

@@ -8,7 +8,7 @@ variable "location" {
 
 variable "contact_emails" {
   description = "Emails to notify before certificate expiry"
-  type = list(
+  type = map(
     object(
       {
         email = string

@@ -19,11 +19,11 @@ module "resource_group" {
 module "monitor_law" {
   source = "./modules/azurerm_log_analytics_workspace"
 
-  name                                      = "${local.name}-monitor-loganalytics"
-  location                                  = module.resource_group.location
-  resource_group_name                       = module.resource_group.name
+  name                                               = "${local.name}-monitor-loganalytics"
+  location                                           = module.resource_group.location
+  resource_group_name                                = module.resource_group.name
   log_analytics_workspace_internet_ingestion_enabled = var.log_analytics_workspace_internet_ingestion_enabled
-  log_analytics_workspace_internet_query_enabled    = var.log_analytics_workspace_internet_query_enabled
+  log_analytics_workspace_internet_query_enabled     = var.log_analytics_workspace_internet_query_enabled
   #log_analytics_workspace_sku               = "PerGB2018"
   #log_analytics_workspace_retention_in_days = 90
 }

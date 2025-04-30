@@ -71,7 +71,7 @@ variable "resource_group" {
 
 variable "contact_emails" {
   description = "Emails to notify when container has non-zero exit"
-  type = list(
+  type = map(
     object(
       {
         email = string

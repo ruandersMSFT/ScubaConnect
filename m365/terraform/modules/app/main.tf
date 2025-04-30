@@ -1,76 +1,54 @@
 locals {
   kv_prefix    = "${var.resource_prefix}-kv-"
   kv_unique_id = substr(replace((var.create_app ? azuread_application.app[0].client_id : data.azuread_application.app[0].client_id), "-", ""), 0, 24 - length(local.kv_prefix))
+
+  key_vault_network_acls = var.allowed_access_ips == null ? null : object({
+    ip_rules = var.allowed_access_ips
+  })
 }
 
 # Azure Key Vault to hold an app registration certificate
-resource "azurerm_key_vault" "vault" {
-  name                            = "${local.kv_prefix}${local.kv_unique_id}"
+module "key_vault" {
+  source = "../azurerm_key_vault"
+
   location                        = var.resource_group.location
   resource_group_name             = var.resource_group.name
-  tenant_id                       = var.tenant_id
-  soft_delete_retention_days      = 7
-  purge_protection_enabled        = true
-  sku_name                        = "standard"
+  contacts                        = var.contact_emails
   enabled_for_deployment          = false
   enabled_for_disk_encryption     = false
   enabled_for_template_deployment = false
-  enable_rbac_authorization       = false
-
-  dynamic "network_acls" {
-    for_each = var.allowed_access_ips == null ? [] : [1]
-    content {
-      default_action             = "Deny"
-      ip_rules                   = var.allowed_access_ips
-      virtual_network_subnet_ids = []
-      bypass                     = "None"
+  legacy_access_policies_enabled  = true
+  legacy_access_policies = {
+    app = {
+      object_id = var.object_id
+      certificate_permissions = [
+        "Create",
+        "Delete",
+        "Recover",
+        "Get",
+        "GetIssuers",
+        "Import",
+        "List",
+        "ListIssuers",
+        "ManageContacts",
+        "Purge",
+        "Update",
+      ]
+      secret_permissions = [
+        "Delete",
+        "Get",
+        "List",
+        "Purge",
+        "Recover",
+        "Set",
+      ]
     }
   }
-
-  access_policy {
-    tenant_id = var.tenant_id
-    object_id = var.object_id
-
-    certificate_permissions = [
-      "Create",
-      "Delete",
-      "Recover",
-      "Get",
-      "GetIssuers",
-      "Import",
-      "List",
-      "ListIssuers",
-      "ManageContacts",
-      "Purge",
-      "Update",
-    ]
-
-    secret_permissions = [
-      "Delete",
-      "Get",
-      "List",
-      "Purge",
-      "Recover",
-      "Set",
-    ]
-  }
-
-  lifecycle {
-    ignore_changes = [tags]
-  }
-}
-
-resource "azurerm_key_vault_certificate_contacts" "contact" {
-  key_vault_id = azurerm_key_vault.vault.id
-
-  dynamic "contact" {
-    for_each = var.contact_emails
-    content {
-      email = contact.value.email
-      name  = contact.value.name
-      phone = contact.value.phone
-    }
-  }
+  name                       = "${local.kv_prefix}${local.kv_unique_id}"
+  network_acls               = local.key_vault_network_acls
+  sku_name                   = var.key_vault_sku_name
+  soft_delete_retention_days = 7
+  tenant_id                  = var.tenant_id
 }
 
 # note this requires terraform to be run regularly
@@ -82,7 +60,7 @@ resource "time_rotating" "cert_rotation" {
 resource "azurerm_key_vault_certificate" "cert" {
   # Name change forces recreating certificate
   name         = "${var.resource_prefix}-app-cert-${formatdate("YYYY-MM-DD", time_rotating.cert_rotation.rfc3339)}"
-  key_vault_id = azurerm_key_vault.vault.id
+  key_vault_id = module.key_vault.resource_id
 
   certificate_policy {
     issuer_parameters {
@@ -139,7 +117,7 @@ resource "azuread_application_certificate" "app_cert" {
 
 data "azurerm_key_vault_certificate_data" "scuba_cert_data" {
   name         = azurerm_key_vault_certificate.cert.name
-  key_vault_id = azurerm_key_vault.vault.id
+  key_vault_id = module.key_vault.resource_id
 }
 
 # Write the cert to a file if it needs to be manually added to the app
@@ -150,5 +128,5 @@ resource "local_file" "scuba_pem_file" {
 
 data "azurerm_key_vault_secret" "pfx_b64" {
   name         = azurerm_key_vault_certificate.cert.name
-  key_vault_id = azurerm_key_vault.vault.id
+  key_vault_id = module.key_vault.resource_id
 }
