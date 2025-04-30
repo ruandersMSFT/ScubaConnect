@@ -76,5 +76,6 @@ terraform state mv 'module.scuba_connect.module.container.azurerm_container_grou
 
 terraform state mv 'module.scuba_connect.module.container.azurerm_container_group.aci["scheduled"]' 'module.container.azurerm_container_group.aci["scheduled"]'
 
-# terraform state mv module.scuba_connect.module.container.azurerm_storage_blob.tenants["myorg.onmicrosoft.com.yaml"] 
+terraform state mv 'module.scuba_connect.module.container.azurerm_storage_blob.tenants["myorg.onmicrosoft.com.yaml"]' 'module.container.azurerm_storage_blob.tenants["myorg.onmicrosoft.com.yaml"]'
 
+terraform import -var-file='variables.tfvars' module.app.azurerm_key_vault_certificate_contacts.contact 'https://scubaruanders-kv-d3503fa.vault.azure.net/certificates/contacts'

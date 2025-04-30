@@ -49,7 +49,7 @@ resource "azurerm_role_assignment" "app_storage_role" {
 resource "azurerm_storage_container" "output" {
   count                 = var.output_storage_container_id == null ? 1 : 0
   name                  = "${var.resource_prefix}-output"
-  storage_account_name  = azurerm_storage_account.storage[0].name
+  storage_account_id    = azurerm_storage_account.storage[0].id
   container_access_type = "private"
 }
 
@@ -57,7 +57,7 @@ resource "azurerm_storage_container" "output" {
 resource "azurerm_storage_container" "input" {
   count                 = var.input_storage_container_id == null ? 1 : 0
   name                  = "${var.resource_prefix}-input"
-  storage_account_name  = azurerm_storage_account.storage[0].name
+  storage_account_id    = azurerm_storage_account.storage[0].id
   container_access_type = "private"
 }
 
