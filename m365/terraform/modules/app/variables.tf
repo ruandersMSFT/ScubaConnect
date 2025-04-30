@@ -3,24 +3,47 @@ variable "app_name" {
   description = "App name. Displayed in Azure console on installed tenants"
 }
 
+variable "azure_portal_endpoint" {
+  type        = string
+  description = "Azure portal endpoint."
+}
+
+#temporary todo now
+variable "is_us_gov" {
+  type        = bool
+  description = "If true, the app will be created in the US Gov cloud. If false, the app will be created in the Azure public cloud."
+}
+
+variable "object_id" {
+  type        = string
+  description = "Object ID of the service principal."
+}
+
 variable "resource_prefix" {
   type        = string
   description = "Prefix to use in resource names"
 }
 
-variable "resource_group_name" {
-  type        = string
-  description = "Name of resource group resources are in"
-}
-
-variable "location" {
-  type        = string
-  description = "Location for resource"
+variable "resource_group" {
+  type = object({
+    name     = string
+    location = string
+    id       = string
+  })
+  description = "Resource group resources should be created in"
 }
 
 variable "contact_emails" {
   description = "Emails to notify before certificate expiry"
-  type        = list(string)
+  type = list(
+    object(
+      {
+        email = string
+        name  = optional(string, null)
+        phone = optional(string, null)
+      }
+    )
+  )
 }
 
 variable "certificate_rotation_period_days" {
@@ -53,4 +76,9 @@ variable "allowed_access_ips" {
   type        = list(string)
   description = "List of IP addresses/subnets in CIDR format that should be able to access keyvault"
   default     = null
+}
+
+variable "tenant_id" {
+  type        = string
+  description = "Tenant ID of the Azure AD tenant"
 }

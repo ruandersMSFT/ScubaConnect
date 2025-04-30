@@ -5,8 +5,8 @@ resource "azurerm_monitor_action_group" "action_group" {
   dynamic "email_receiver" {
     for_each = var.contact_emails
     content {
-      name          = "email ${email_receiver.value}"
-      email_address = email_receiver.value
+      name          = "email ${email_receiver.value.email}"
+      email_address = email_receiver.value.email
     }
   }
 }

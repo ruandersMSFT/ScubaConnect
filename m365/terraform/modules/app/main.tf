@@ -1,6 +1,3 @@
-data "azurerm_client_config" "current" {}
-data "azuread_client_config" "current" {}
-
 locals {
   kv_prefix    = "${var.resource_prefix}-kv-"
   kv_unique_id = substr(replace((var.create_app ? azuread_application.app[0].client_id : data.azuread_application.app[0].client_id), "-", ""), 0, 24 - length(local.kv_prefix))
@@ -9,9 +6,9 @@ locals {
 # Azure Key Vault to hold an app registration certificate
 resource "azurerm_key_vault" "vault" {
   name                            = "${local.kv_prefix}${local.kv_unique_id}"
-  location                        = var.location
-  resource_group_name             = var.resource_group_name
-  tenant_id                       = data.azurerm_client_config.current.tenant_id
+  location                        = var.resource_group.location
+  resource_group_name             = var.resource_group.name
+  tenant_id                       = var.tenant_id
   soft_delete_retention_days      = 7
   purge_protection_enabled        = true
   sku_name                        = "standard"
@@ -19,13 +16,6 @@ resource "azurerm_key_vault" "vault" {
   enabled_for_disk_encryption     = false
   enabled_for_template_deployment = false
   enable_rbac_authorization       = false
-
-  dynamic "contact" {
-    for_each = var.contact_emails
-    content {
-      email = contact.value
-    }
-  }
 
   dynamic "network_acls" {
     for_each = var.allowed_access_ips == null ? [] : [1]
@@ -37,10 +27,9 @@ resource "azurerm_key_vault" "vault" {
     }
   }
 
-
   access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azuread_client_config.current.object_id
+    tenant_id = var.tenant_id
+    object_id = var.object_id
 
     certificate_permissions = [
       "Create",
@@ -68,6 +57,19 @@ resource "azurerm_key_vault" "vault" {
 
   lifecycle {
     ignore_changes = [tags]
+  }
+}
+
+resource "azurerm_key_vault_certificate_contacts" "contact" {
+  key_vault_id = azurerm_key_vault.vault.id
+
+  dynamic "contact" {
+    for_each = var.contact_emails
+    content {
+      email = contact.value
+      name  = contact.name
+      phone = contact.phone
+    }
   }
 }
 

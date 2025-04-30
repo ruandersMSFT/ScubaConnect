@@ -1,13 +1,16 @@
 ### REQUIRED ###
 
 variable "contact_emails" {
-  description = "Emails to notify for alerts and before certificate expiry"
-  type        = list(string)
-}
-
-variable "resource_group_name" {
-  type        = string
-  description = "Resource group to create and build resources in"
+  description = "Emails to notify before certificate expiry"
+  type = list(
+    object(
+      {
+        email = string
+        name  = optional(string, null)
+        phone = optional(string, null)
+      }
+    )
+  )
 }
 
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs#environment-1
@@ -21,6 +24,10 @@ variable "environment" {
   }
 }
 
+variable "resource_group_name" {
+  type        = string
+  description = "Resource group to create and build resources in"
+}
 
 ### OPTIONAL ###
 

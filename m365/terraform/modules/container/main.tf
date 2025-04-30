@@ -1,10 +1,3 @@
-data "azurerm_client_config" "current" {}
-
-locals {
-  is_us_gov = startswith(lower(var.resource_group.location), "usgov")
-  aad_endpoint = local.is_us_gov ? "https://login.microsoftonline.us" : "https://login.microsoftonline.com"
-}
-
 # Azure Container Instances to run the ScubaGear container
 # One group is automatically executed periodically, the other manually
 resource "azurerm_container_group" "aci" {
@@ -40,11 +33,11 @@ resource "azurerm_container_group" "aci" {
     memory = var.container_memory_gb
     environment_variables = {
       "RUN_TYPE"                         = each.key
-      "TENANT_ID"                        = data.azurerm_client_config.current.tenant_id
+      "TENANT_ID"                        = var.tenant_id
       "APP_ID"                           = var.application_client_id
       "REPORT_OUTPUT"                    = var.output_storage_container_id == null ? azurerm_storage_container.output[0].id : var.output_storage_container_id
       "TENANT_INPUT"                     = var.input_storage_container_id == null ? azurerm_storage_container.input[0].id : var.input_storage_container_id
-      "AZCOPY_ACTIVE_DIRECTORY_ENDPOINT" = local.aad_endpoint
+      "AZCOPY_ACTIVE_DIRECTORY_ENDPOINT" = var.azure_active_directory_endpoint
       "DEBUG_LOG"                        = "false"
     }
     secure_environment_variables = {

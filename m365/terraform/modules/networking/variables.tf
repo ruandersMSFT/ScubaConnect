@@ -1,11 +1,10 @@
-variable "resource_group_name" {
-  type        = string
-  description = "Name of resource group resources are in"
-}
-
-variable "location" {
-  type        = string
-  description = "Location for resource"
+variable "resource_group" {
+  type = object({
+    name     = string
+    location = string
+    id       = string
+  })
+  description = "Resource group resources should be created in"
 }
 
 variable "resource_prefix" {

@@ -2,8 +2,8 @@
 # Further destination restrictions may be imposed by Azure Firewall
 resource "azurerm_network_security_group" "nsg" {
   name                = "${var.resource_prefix}-nsg"
-  location            = var.location
-  resource_group_name = var.resource_group_name
+  location            = var.resource_group.location
+  resource_group_name = var.resource_group.name
 
   security_rule {
     name                       = "Allow-Outbound"
@@ -37,8 +37,8 @@ resource "azurerm_network_security_group" "nsg" {
 # VNet which hosts the ScubaGear container
 resource "azurerm_virtual_network" "vnet" {
   name                = "${var.resource_prefix}-vnet"
-  location            = var.location
-  resource_group_name = var.resource_group_name
+  location            = var.resource_group.location
+  resource_group_name = var.resource_group.name
   address_space       = [var.vnet.address_space]
 
   lifecycle {
@@ -50,7 +50,7 @@ resource "azurerm_virtual_network" "vnet" {
 resource "azurerm_subnet" "aci-subnet" {
   name                 = "${var.resource_prefix}-aci-subnet"
   virtual_network_name = azurerm_virtual_network.vnet.name
-  resource_group_name  = var.resource_group_name
+  resource_group_name  = var.resource_group.name
   address_prefixes     = [var.vnet.aci_subnet]
   service_endpoints    = ["Microsoft.Storage"]
   delegation {

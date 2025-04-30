@@ -1,3 +1,17 @@
+variable "azure_active_directory_endpoint" {
+  type        = string
+  description = "The Azure Active Directory endpoint to use for authentication"
+}
+
+variable "azure_environment" {
+  type        = string
+  description = "The Azure environment to use. Can be 'AzureCloud' or 'AzureUSGovernment'"
+  validation {
+    condition     = contains(["AzureCloud", "AzureUSGovernment"], var.azure_environment)
+    error_message = "Must be one of 'AzureCloud', 'AzureUSGovernment'"
+  }
+}
+
 variable "resource_prefix" {
   type        = string
   description = "Prefix to use in resource names"
@@ -57,7 +71,13 @@ variable "resource_group" {
 
 variable "contact_emails" {
   description = "Emails to notify when container has non-zero exit"
-  type        = list(string)
+  type = list(
+    object(
+      {
+        email = string
+      }
+    )
+  )
 }
 
 variable "log_analytics_workspace" {
@@ -78,7 +98,7 @@ variable "allowed_access_ips" {
 variable "subnet_ids" {
   type        = list(string)
   description = "List of subnets used for storage and Azure Container Instances"
-  default = null
+  default     = null
 }
 
 variable "container_registry" {
@@ -87,7 +107,7 @@ variable "container_registry" {
     username = string
     password = string
   })
-  default = null
+  default     = null
   description = "Credentials for logging into registry with container image"
 }
 
@@ -104,4 +124,9 @@ variable "container_memory_gb" {
     condition     = var.container_memory_gb <= 16 && var.container_memory_gb >= 2
     error_message = "Container memory must be between 2GB and 16GB"
   }
+}
+
+variable "tenant_id" {
+  type        = string
+  description = "Tenant ID of the Azure AD tenant"
 }

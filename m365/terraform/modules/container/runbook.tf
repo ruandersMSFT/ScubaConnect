@@ -22,7 +22,7 @@ resource "azurerm_automation_account" "runner_aa" {
 # Role which allows the script to start Azure Container Instances
 resource "azurerm_role_definition" "start_container_role" {
   name  = "${var.resource_prefix}-start-aci-${var.application_client_id}"
-  scope = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group.name}"
+  scope = var.resource_group.id
 
   permissions {
     actions = ["Microsoft.ContainerInstance/containerGroups/start/action"]
@@ -78,6 +78,6 @@ resource "azurerm_automation_job_schedule" "runner_job_schedule" {
     # must be all lowercase here: https://github.com/Azure/azure-sdk-for-go/issues/4780
     "resourcegroupname"     = var.resource_group.name
     "containerinstancename" = azurerm_container_group.aci["scheduled"].name
-    "environment"           = local.is_us_gov ? "AzureUSGovernment" : "AzureCloud"
+    "environment"           = var.azure_environment
   }
 }

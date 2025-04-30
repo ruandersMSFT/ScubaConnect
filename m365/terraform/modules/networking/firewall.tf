@@ -13,8 +13,8 @@ data "azurerm_firewall" "firewall" {
 resource "azurerm_route_table" "route_table" {
   count               = var.firewall != null ? 1 : 0
   name                = "${var.resource_prefix}-rt"
-  location            = var.location
-  resource_group_name = var.resource_group_name
+  location            = var.resource_group.location
+  resource_group_name = var.resource_group.name
 
   lifecycle {
     ignore_changes = [tags]
@@ -43,7 +43,7 @@ data "azurerm_virtual_network" "firewall_vnet" {
 resource "azurerm_virtual_network_peering" "firewall_peering" {
   count                     = var.firewall != null ? 1 : 0
   name                      = "peer-scuba-to-firewall"
-  resource_group_name       = var.resource_group_name
+  resource_group_name       = var.resource_group.name
   virtual_network_name      = azurerm_virtual_network.vnet.name
   remote_virtual_network_id = data.azurerm_virtual_network.firewall_vnet[0].id
 }
