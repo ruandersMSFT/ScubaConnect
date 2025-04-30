@@ -14,12 +14,12 @@ variable "contact_emails" {
 }
 
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs#environment-1
-variable "environment" {
+variable "terraform_azurerm_environment" {
   description = "The environment can be set to 'public' for the global Azure cloud, or 'usgovernment' for the Azure US Government cloud."
   type        = string
   default     = "public"
   validation {
-    condition     = contains(["public", "usgovernment"], var.environment)
+    condition     = contains(["public", "usgovernment"], var.terraform_azurerm_environment)
     error_message = "Environment must be either 'public' or 'usgovernment'."
   }
 }

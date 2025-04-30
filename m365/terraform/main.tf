@@ -3,9 +3,9 @@ data "azurerm_client_config" "current" {}
 
 locals {
   name                            = var.prefix_override != null ? var.prefix_override : replace(lower(var.app_name), " ", "-")
-  azure_active_directory_endpoint = var.environment == "public" ? "https://login.microsoftonline.com" : var.environment == "usgovernment" ? "https://login.microsoftonline.us" : null
-  azure_environment               = var.environment == "public" ? "AzureCloud" : var.environment == "usgovernment" ? "AzureUSGovernment" : null
-  azure_portal_endpoint           = var.environment == "public" ? "https://portal.azure.com" : var.environment == "usgovernment" ? "https://portal.azure.us" : null
+  azure_active_directory_endpoint = var.terraform_azurerm_environment == "public" ? "https://login.microsoftonline.com" : var.terraform_azurerm_environment == "usgovernment" ? "https://login.microsoftonline.us" : null
+  azure_environment               = var.terraform_azurerm_environment == "public" ? "AzureCloud" : var.terraform_azurerm_environment == "usgovernment" ? "AzureUSGovernment" : null
+  azure_portal_endpoint           = var.terraform_azurerm_environment == "public" ? "https://portal.azure.com" : var.terraform_azurerm_environment == "usgovernment" ? "https://portal.azure.us" : null
 }
 
 # Azure Resource Group that contains most resources
@@ -39,7 +39,7 @@ module "app" {
   allowed_access_ips               = try(var.vnet.allowed_access_ip_list, null)
   certificate_rotation_period_days = var.certificate_rotation_period_days
   app_multi_tenant                 = var.app_multi_tenant
-  is_us_gov                        = var.environment == "usgovernment" ? true : false
+  is_us_gov                        = var.terraform_azurerm_environment == "usgovernment" ? true : false
   tenant_id                        = data.azurerm_client_config.current.tenant_id
   object_id                        = data.azuread_client_config.current.object_id
 }

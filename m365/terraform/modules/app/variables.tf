@@ -8,12 +8,6 @@ variable "azure_portal_endpoint" {
   description = "Azure portal endpoint."
 }
 
-#temporary todo now
-variable "is_us_gov" {
-  type        = bool
-  description = "If true, the app will be created in the US Gov cloud. If false, the app will be created in the Azure public cloud."
-}
-
 variable "object_id" {
   type        = string
   description = "Object ID of the service principal."
