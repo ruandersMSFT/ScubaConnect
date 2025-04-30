@@ -10,28 +10,30 @@ locals {
 
 # Azure Resource Group that contains most resources
 module "resource_group" {
-  source                           = "./modules/azurerm_resource_group"
+  source = "./modules/azurerm_resource_group"
 
   name     = "${var.resource_group_name}-${var.serial_number}"
   location = var.location
 }
 
-resource "azurerm_log_analytics_workspace" "monitor_law" {
-  name                = "${local.name}-monitor-loganalytics"
-  location            = module.resource_group.location
-  resource_group_name = module.resource_group.name
-  sku                 = "PerGB2018"
-  retention_in_days   = 90
+module "monitor_law" {
+  source = "./modules/azurerm_log_analytics_workspace"
 
-  lifecycle {
-    ignore_changes = [tags]
-  }
+  name                                      = "${local.name}-monitor-loganalytics"
+  location                                  = module.resource_group.location
+  resource_group_name                       = module.resource_group.name
+  log_analytics_workspace_internet_ingestion_enabled = var.log_analytics_workspace_internet_ingestion_enabled
+  log_analytics_workspace_internet_query_enabled    = var.log_analytics_workspace_internet_query_enabled
+  #log_analytics_workspace_sku               = "PerGB2018"
+  #log_analytics_workspace_retention_in_days = 90
 }
+
+
 
 # Creates the app registration, or reads an existing one, which is used by the ScubaGear container
 module "app" {
   source                           = "./modules/app"
-  resource_group                   = module.resource_group.object
+  resource_group                   = module.resource_group.resource
   resource_prefix                  = local.name
   app_name                         = var.app_name
   azure_portal_endpoint            = local.azure_portal_endpoint
@@ -49,7 +51,7 @@ module "app" {
 module "networking" {
   count           = var.vnet == null ? 0 : 1
   source          = "./modules/networking"
-  resource_group  = module.resource_group.object
+  resource_group  = module.resource_group.resource
   resource_prefix = local.name
   firewall        = var.firewall
   vnet            = var.vnet
@@ -58,7 +60,7 @@ module "networking" {
 module "container" {
   source                          = "./modules/container"
   resource_prefix                 = local.name
-  resource_group                  = module.resource_group.object
+  resource_group                  = module.resource_group.resource
   azure_active_directory_endpoint = local.azure_active_directory_endpoint
   azure_environment               = local.azure_environment
   container_registry              = var.container_registry
@@ -72,7 +74,7 @@ module "container" {
   output_storage_container_id     = var.output_storage_container_id
   input_storage_container_id      = var.input_storage_container_id
   contact_emails                  = var.contact_emails
-  log_analytics_workspace         = azurerm_log_analytics_workspace.monitor_law
+  log_analytics_workspace         = module.monitor_law.resource
   container_memory_gb             = var.container_memory_gb
   tenant_id                       = data.azurerm_client_config.current.tenant_id
 }

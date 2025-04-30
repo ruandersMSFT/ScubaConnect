@@ -19,7 +19,7 @@ Todo
 - Consider buildout of parameters (consumption of Azure Verified Modules?)
 - Consider standard sku KeyVault (not hsm backed)
 - Consider NSG Deny rule is only denying TCP, but not UDP.
-
+- Future consideration for internet_ingestion_enabled and internet_query_enabled of log workspace
 
 
 
@@ -69,7 +69,7 @@ terraform state mv module.scuba_connect.module.container.azurerm_storage_contain
 
 terraform state mv module.scuba_connect.module.container.azurerm_storage_container.output[0] module.container.azurerm_storage_container.output[0]
 
-terraform state mv module.scuba_connect.azurerm_log_analytics_workspace.monitor_law azurerm_log_analytics_workspace.monitor_law
+terraform state mv module.scuba_connect.azurerm_log_analytics_workspace.monitor_law module.monitor_law.azurerm_log_analytics_workspace.this
 
 terraform state mv 'module.scuba_connect.module.container.azurerm_container_group.aci["adhoc"]' 'module.container.azurerm_container_group.aci["adhoc"]'
 

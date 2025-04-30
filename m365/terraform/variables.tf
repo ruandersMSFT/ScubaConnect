@@ -3,7 +3,7 @@
 variable "location" {
   type        = string
   description = "Azure region to create resources in. Defaults to 'East US'."
-  nullable = false
+  nullable    = false
 }
 
 variable "contact_emails" {
@@ -36,6 +36,18 @@ variable "resource_group_name" {
 }
 
 ### OPTIONAL ###
+
+variable "log_analytics_workspace_internet_ingestion_enabled" {
+  type        = bool
+  default     = "false"
+  description = "(Required) Should the Log Analytics Workspace support ingestion over the Public Internet? Defaults to `False`."
+}
+
+variable "log_analytics_workspace_internet_query_enabled" {
+  type        = bool
+  default     = "false"
+  description = "(Required) Should the Log Analytics Workspace support querying over the Public Internet? Defaults to `False`."
+}
 
 variable "schedule_interval" {
   default     = "Week"

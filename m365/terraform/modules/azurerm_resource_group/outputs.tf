@@ -8,11 +8,6 @@ output "name" {
   value       = azurerm_resource_group.this.name
 }
 
-output "object" {
-  description = "The resource group object"
-  value       = azurerm_resource_group.this
-}
-
 output "resource" {
   description = "This is the full output for the resource group."
   value       = azurerm_resource_group.this
