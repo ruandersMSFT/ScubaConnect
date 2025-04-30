@@ -1,5 +1,11 @@
 ### REQUIRED ###
 
+variable "location" {
+  type        = string
+  description = "Azure region to create resources in. Defaults to 'East US'."
+  nullable = false
+}
+
 variable "contact_emails" {
   description = "Emails to notify before certificate expiry"
   type = list(
@@ -30,12 +36,6 @@ variable "resource_group_name" {
 }
 
 ### OPTIONAL ###
-
-variable "location" {
-  default     = "East US"
-  type        = string
-  description = "Azure region to create resources in. Defaults to 'East US'."
-}
 
 variable "schedule_interval" {
   default     = "Week"

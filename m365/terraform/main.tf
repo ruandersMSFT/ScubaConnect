@@ -9,15 +9,17 @@ locals {
 }
 
 # Azure Resource Group that contains most resources
-resource "azurerm_resource_group" "rg" {
+module "resource_group" {
+  source                           = "./modules/azurerm_resource_group"
+
   name     = "${var.resource_group_name}-${var.serial_number}"
   location = var.location
 }
 
 resource "azurerm_log_analytics_workspace" "monitor_law" {
   name                = "${local.name}-monitor-loganalytics"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = module.resource_group.location
+  resource_group_name = module.resource_group.name
   sku                 = "PerGB2018"
   retention_in_days   = 90
 
@@ -29,7 +31,7 @@ resource "azurerm_log_analytics_workspace" "monitor_law" {
 # Creates the app registration, or reads an existing one, which is used by the ScubaGear container
 module "app" {
   source                           = "./modules/app"
-  resource_group                   = azurerm_resource_group.rg
+  resource_group                   = module.resource_group.object
   resource_prefix                  = local.name
   app_name                         = var.app_name
   azure_portal_endpoint            = local.azure_portal_endpoint
@@ -47,7 +49,7 @@ module "app" {
 module "networking" {
   count           = var.vnet == null ? 0 : 1
   source          = "./modules/networking"
-  resource_group  = azurerm_resource_group.rg
+  resource_group  = module.resource_group.object
   resource_prefix = local.name
   firewall        = var.firewall
   vnet            = var.vnet
@@ -56,7 +58,7 @@ module "networking" {
 module "container" {
   source                          = "./modules/container"
   resource_prefix                 = local.name
-  resource_group                  = azurerm_resource_group.rg
+  resource_group                  = module.resource_group.object
   azure_active_directory_endpoint = local.azure_active_directory_endpoint
   azure_environment               = local.azure_environment
   container_registry              = var.container_registry

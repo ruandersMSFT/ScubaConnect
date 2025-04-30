@@ -23,7 +23,7 @@ Todo
 
 
 
-terraform state mv module.scuba_connect.azurerm_resource_group.rg azurerm_resource_group.rg
+terraform state mv module.scuba_connect.azurerm_resource_group.rg module.resource_group.azurerm_resource_group.this
 
 terraform state mv module.scuba_connect.module.app.azuread_application.app[0] module.app.azuread_application.app 
 
