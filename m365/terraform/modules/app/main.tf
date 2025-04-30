@@ -66,9 +66,9 @@ resource "azurerm_key_vault_certificate_contacts" "contact" {
   dynamic "contact" {
     for_each = var.contact_emails
     content {
-      email = contact.value
-      name  = contact.name
-      phone = contact.phone
+      email = contact.value.email
+      name  = contact.value.name
+      phone = contact.value.phone
     }
   }
 }
