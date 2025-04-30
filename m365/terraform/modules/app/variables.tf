@@ -8,6 +8,11 @@ variable "azure_portal_endpoint" {
   description = "Azure portal endpoint."
 }
 
+variable "terraform_azurerm_environment" {
+  description = "The environment can be set to 'public' for the global Azure cloud, or 'usgovernment' for the Azure US Government cloud."
+  type        = string
+}
+
 variable "object_id" {
   type        = string
   description = "Object ID of the service principal."

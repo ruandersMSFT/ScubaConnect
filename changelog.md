@@ -9,12 +9,12 @@
 - Bug fix on output for correct id for input_storage_container_id
 - Add Environment to Variable
 - Add cross_tenant_replication_enabled to azurerm_storage_account 
+- Discontinued "usgov" name ends with in favor of AzureRM Environment
 
 Todo
 
 - Incorporate PowerBI changes
 - Azure Gov AzureRM Provider environment setting in documentation
-- Is Azure Gov local variables vs provider?
 - Attributes for AzureRM 4 resources
 - Consider buildout of parameters (consumption of Azure Verified Modules?)
 - Consider standard sku KeyVault (not hsm backed)

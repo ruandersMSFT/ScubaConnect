@@ -39,7 +39,7 @@ module "app" {
   allowed_access_ips               = try(var.vnet.allowed_access_ip_list, null)
   certificate_rotation_period_days = var.certificate_rotation_period_days
   app_multi_tenant                 = var.app_multi_tenant
-  is_us_gov                        = var.terraform_azurerm_environment == "usgovernment" ? true : false
+  terraform_azurerm_environment    = var.terraform_azurerm_environment
   tenant_id                        = data.azurerm_client_config.current.tenant_id
   object_id                        = data.azuread_client_config.current.object_id
 }

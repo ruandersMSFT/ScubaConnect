@@ -65,7 +65,7 @@ resource "azuread_application" "app" {
   # Only needed in GCC High
   # see https://github.com/cisagov/ScubaGear/blob/main/docs/prerequisites/noninteractive.md#additional-gcc-high-details
   dynamic "required_resource_access" {
-    for_each = var.is_us_gov ? [1] : []
+    for_each = var.terraform_azurerm_environment == "usgovernment" ? [1] : []
     content {
       resource_app_id = data.azuread_application_published_app_ids.well_known.result.Office365ExchangeOnlineProtection
       resource_access {
