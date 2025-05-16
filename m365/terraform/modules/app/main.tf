@@ -47,7 +47,7 @@ module "key_vault" {
   name                       = "${local.kv_prefix}${local.kv_unique_id}"
   network_acls               = local.key_vault_network_acls
   sku_name                   = var.key_vault_sku_name
-  soft_delete_retention_days = 7
+  soft_delete_retention_days = var.key_vault_soft_delete_retention_days
   tenant_id                  = var.tenant_id
 }
 

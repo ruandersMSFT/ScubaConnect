@@ -1,11 +1,20 @@
 locals {
   sa_prefix    = replace(var.resource_prefix, "-", "")
   sa_unique_id = substr(replace(var.application_client_id, "-", ""), 0, 24 - length(local.sa_prefix))
+  
+  network_rules = var.allowed_access_ips == null ? null : object({
+    bypass                     = ["AzureServices"]
+    default_action             = "Deny"
+    ip_rules                   = var.allowed_access_ips
+    virtual_network_subnet_ids = var.subnet_ids
+  })
 }
 
 # Azure Storage Account used by the ScubaGear container
-resource "azurerm_storage_account" "storage" {
-  count               = var.output_storage_container_id == null || var.input_storage_container_id == null ? 1 : 0
+module "storage" {
+  source = "../azurerm_storage_account"
+  count  = var.output_storage_container_id == null || var.input_storage_container_id == null ? 1 : 0
+
   name                = "${local.sa_prefix}${local.sa_unique_id}"
   resource_group_name = var.resource_group.name
   location            = var.resource_group.location
@@ -18,29 +27,20 @@ resource "azurerm_storage_account" "storage" {
   https_traffic_only_enabled        = true # default
   allow_nested_items_to_be_public   = false
   min_tls_version                   = "TLS1_2"
-  identity {
-    type = "SystemAssigned"
-  }
+  public_network_access_enabled = true
+  shared_access_key_enabled = true
 
-  dynamic "network_rules" {
-    for_each = var.allowed_access_ips == null ? [] : [1]
-    content {
-      default_action             = "Deny"
-      ip_rules                   = var.allowed_access_ips
-      virtual_network_subnet_ids = var.subnet_ids
-      bypass                     = ["AzureServices"]
-    }
-  }
+  network_rules = local.network_rules
 
-  lifecycle {
-    ignore_changes = [tags]
+  managed_identities = {
+    system_assigned = true
   }
 }
 
 # Allows the app registration used by the ScubaGear container to read/write to the storage account
 resource "azurerm_role_assignment" "app_storage_role" {
   count                = var.output_storage_container_id == null || var.input_storage_container_id == null ? 1 : 0
-  scope                = azurerm_storage_account.storage[0].id
+  scope                = module.storage[0].resource_id
   role_definition_name = "Storage Blob Data Contributor"
   principal_id         = var.application_object_id
 }
@@ -49,7 +49,7 @@ resource "azurerm_role_assignment" "app_storage_role" {
 resource "azurerm_storage_container" "output" {
   count                 = var.output_storage_container_id == null ? 1 : 0
   name                  = "${var.resource_prefix}-output"
-  storage_account_id    = azurerm_storage_account.storage[0].id
+  storage_account_id    = module.storage[0].resource_id
   container_access_type = "private"
 }
 
@@ -57,7 +57,7 @@ resource "azurerm_storage_container" "output" {
 resource "azurerm_storage_container" "input" {
   count                 = var.input_storage_container_id == null ? 1 : 0
   name                  = "${var.resource_prefix}-input"
-  storage_account_id    = azurerm_storage_account.storage[0].id
+  storage_account_id    = module.storage[0].resource_id
   container_access_type = "private"
 }
 
@@ -65,7 +65,7 @@ resource "azurerm_storage_container" "input" {
 resource "azurerm_storage_blob" "tenants" {
   for_each               = fileset(var.tenants_dir_path, "*")
   name                   = each.key
-  storage_account_name   = azurerm_storage_account.storage[0].name
+  storage_account_name   = module.storage[0].name
   storage_container_name = azurerm_storage_container.input[0].name
   type                   = "Block"
   source                 = "${var.tenants_dir_path}/${each.key}"

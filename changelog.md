@@ -63,7 +63,7 @@ terraform state mv module.scuba_connect.module.container.azurerm_role_assignment
 
 terraform state mv module.scuba_connect.module.container.azurerm_role_definition.start_container_role module.container.azurerm_role_definition.start_container_role
 
-terraform state mv module.scuba_connect.module.container.azurerm_storage_account.storage[0] module.container.azurerm_storage_account.storage[0]
+terraform state mv module.scuba_connect.module.container.azurerm_storage_account.storage[0] module.container.module.storage[0].azurerm_storage_account.this
 
 terraform state mv module.scuba_connect.module.container.azurerm_storage_container.input[0] module.container.azurerm_storage_container.input[0]
 
