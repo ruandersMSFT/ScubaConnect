@@ -10,8 +10,10 @@ locals {
 
 # Azure Resource Group that contains most resources
 module "resource_group" {
-  source = "./modules/azurerm_resource_group"
+  source  = "Azure/avm-res-resources-resourcegroup/azurerm"
+  version = "0.2.1"
 
+  enable_telemetry = false
   name     = "${var.resource_group_name}-${var.serial_number}"
   location = var.location
 }
@@ -20,7 +22,7 @@ module "monitor_law" {
   source = "./modules/azurerm_log_analytics_workspace"
 
   name                                               = "${local.name}-monitor-loganalytics"
-  location                                           = module.resource_group.location
+  location                                           = module.resource_group.resource.location
   resource_group_name                                = module.resource_group.name
   log_analytics_workspace_internet_ingestion_enabled = var.log_analytics_workspace_internet_ingestion_enabled
   log_analytics_workspace_internet_query_enabled     = var.log_analytics_workspace_internet_query_enabled

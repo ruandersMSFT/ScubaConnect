@@ -3,6 +3,10 @@ locals {
   aa_unique_id = substr(replace(var.application_client_id, "-", ""), 0, 50 - length(local.aa_prefix))
 }
 
+data "local_file" "runner_runbook" {
+  filename = "${path.module}/runner_runbook.ps1"
+}
+
 module "runner" {
   source  = "Azure/avm-res-automation-automationaccount/azurerm"
   version = "0.1.0"
@@ -20,10 +24,10 @@ module "runner" {
   }
   automation_schedules = {
     runner_schedule = {
-      frequency               = var.schedule_interval
+      frequency   = var.schedule_interval
       name        = "${var.resource_prefix}-runner-schedule"
       description = "Schedule to run ${var.resource_prefix} container instance"
-      timezone = "Etc/UTC"
+      timezone    = "Etc/UTC"
     }
   }
   name                          = "${local.aa_prefix}${local.aa_unique_id}"
@@ -52,10 +56,6 @@ resource "azurerm_role_assignment" "aa_system_id" {
   scope              = var.resource_group.id
   role_definition_id = azurerm_role_definition.start_container_role.role_definition_resource_id
   principal_id       = module.runner.system_assigned_mi_principal_id
-}
-
-data "local_file" "runner_runbook" {
-  filename = "${path.module}/runner_runbook.ps1"
 }
 
 # Assigns the schedule to the runbook
