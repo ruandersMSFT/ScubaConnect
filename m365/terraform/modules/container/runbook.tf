@@ -7,12 +7,23 @@ module "runner" {
   source  = "Azure/avm-res-automation-automationaccount/azurerm"
   version = "0.1.0"
 
-  name                = "${local.aa_prefix}${local.aa_unique_id}"
-  location            = var.resource_group.location
-  resource_group_name = var.resource_group.name
+  automation_runbooks = {
+    runbook = {
+      description                = "Runbook for starting scheduled ${var.resource_prefix} container instance"
+      name                       = "${var.resource_prefix}-runner-runbook"
+      content                    = data.local_file.runner_runbook.content
+      runbook_type               = "PowerShell72"
+      log_analytics_workspace_id = var.log_analytics_workspace.id
+      log_progress               = true
+      log_verbose                = true
+    }
+  }
+  name                          = "${local.aa_prefix}${local.aa_unique_id}"
+  location                      = var.resource_group.location
+  resource_group_name           = var.resource_group.name
   public_network_access_enabled = true
-  sku            = "Basic"
-  enable_telemetry = false
+  sku                           = "Basic"
+  enable_telemetry              = false
   managed_identities = {
     system_assigned = true
   }
@@ -39,24 +50,6 @@ data "local_file" "runner_runbook" {
   filename = "${path.module}/runner_runbook.ps1"
 }
 
-# Azure Runbook the script itself (see runner_runbook.ps1)
-resource "azurerm_automation_runbook" "runner_book" {
-  name                    = "${var.resource_prefix}-runner-runbook"
-  location                = var.resource_group.location
-  resource_group_name     = var.resource_group.name
-  automation_account_name = module.runner.automation_account_name
-  log_verbose             = "true"
-  log_progress            = "true"
-  description             = "Runbook for starting scheduled ${var.resource_prefix} container instance"
-  runbook_type            = "PowerShell72"
-
-  content = data.local_file.runner_runbook.content
-
-  lifecycle {
-    ignore_changes = [tags]
-  }
-}
-
 # Simple schedule for the runbook
 resource "azurerm_automation_schedule" "runner_schedule" {
   name                    = "${var.resource_prefix}-runner-schedule"
@@ -72,7 +65,7 @@ resource "azurerm_automation_job_schedule" "runner_job_schedule" {
   resource_group_name     = var.resource_group.name
   automation_account_name = module.runner.automation_account_name
   schedule_name           = azurerm_automation_schedule.runner_schedule.name
-  runbook_name            = azurerm_automation_runbook.runner_book.name
+  runbook_name            = "todo" # azurerm_automation_runbook.runner_book.name
   parameters = {
     # must be all lowercase here: https://github.com/Azure/azure-sdk-for-go/issues/4780
     "resourcegroupname"     = var.resource_group.name

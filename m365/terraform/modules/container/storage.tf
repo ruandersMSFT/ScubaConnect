@@ -14,7 +14,7 @@ locals {
 module "storage" {
   source  = "Azure/avm-res-storage-storageaccount/azurerm"
   version = "0.6.1"
-  count  = var.output_storage_container_id == null || var.input_storage_container_id == null ? 1 : 0
+  count   = var.output_storage_container_id == null || var.input_storage_container_id == null ? 1 : 0
 
   name                = "${local.sa_prefix}${local.sa_unique_id}"
   resource_group_name = var.resource_group.name
@@ -24,7 +24,7 @@ module "storage" {
   account_replication_type          = "GZRS"
   account_kind                      = "StorageV2"
   cross_tenant_replication_enabled  = false
-  enable_telemetry = false
+  enable_telemetry                  = false
   infrastructure_encryption_enabled = true
   https_traffic_only_enabled        = true # default
   allow_nested_items_to_be_public   = false

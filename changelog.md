@@ -44,7 +44,7 @@ terraform state mv module.scuba_connect.module.container.azurerm_automation_acco
 
 terraform state mv module.scuba_connect.module.container.azurerm_automation_job_schedule.runner_job_schedule module.container.azurerm_automation_job_schedule.runner_job_schedule
 
-terraform state mv module.scuba_connect.module.container.azurerm_automation_runbook.runner_book module.container.azurerm_automation_runbook.runner_book
+terraform state mv module.scuba_connect.module.container.azurerm_automation_runbook.runner_book 'module.container.module.runner.azurerm_automation_runbook.this["runbook"]'
 
 terraform state mv module.scuba_connect.module.container.azurerm_automation_schedule.runner_schedule module.container.azurerm_automation_schedule.runner_schedule 
 
