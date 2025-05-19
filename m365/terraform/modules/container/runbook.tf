@@ -18,6 +18,14 @@ module "runner" {
       log_verbose                = true
     }
   }
+  automation_schedules = {
+    runner_schedule = {
+      frequency               = var.schedule_interval
+      name        = "${var.resource_prefix}-runner-schedule"
+      description = "Schedule to run ${var.resource_prefix} container instance"
+      timezone = "Etc/UTC"
+    }
+  }
   name                          = "${local.aa_prefix}${local.aa_unique_id}"
   location                      = var.resource_group.location
   resource_group_name           = var.resource_group.name
@@ -50,21 +58,11 @@ data "local_file" "runner_runbook" {
   filename = "${path.module}/runner_runbook.ps1"
 }
 
-# Simple schedule for the runbook
-resource "azurerm_automation_schedule" "runner_schedule" {
-  name                    = "${var.resource_prefix}-runner-schedule"
-  resource_group_name     = var.resource_group.name
-  automation_account_name = module.runner.automation_account_name
-  frequency               = var.schedule_interval
-  interval                = 1
-  description             = "Schedule to run ${var.resource_prefix} container instance"
-}
-
 # Assigns the schedule to the runbook
 resource "azurerm_automation_job_schedule" "runner_job_schedule" {
   resource_group_name     = var.resource_group.name
   automation_account_name = module.runner.automation_account_name
-  schedule_name           = azurerm_automation_schedule.runner_schedule.name
+  schedule_name           = "todo" # azurerm_automation_schedule.runner_schedule.name
   runbook_name            = "todo" # azurerm_automation_runbook.runner_book.name
   parameters = {
     # must be all lowercase here: https://github.com/Azure/azure-sdk-for-go/issues/4780
