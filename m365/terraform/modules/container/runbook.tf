@@ -3,19 +3,18 @@ locals {
   aa_unique_id = substr(replace(var.application_client_id, "-", ""), 0, 50 - length(local.aa_prefix))
 }
 
-# Automation Account for a script which periodically runs the ScubaGear container
-resource "azurerm_automation_account" "runner_aa" {
+module "runner" {
+  source  = "Azure/avm-res-automation-automationaccount/azurerm"
+  version = "0.1.0"
+
   name                = "${local.aa_prefix}${local.aa_unique_id}"
   location            = var.resource_group.location
   resource_group_name = var.resource_group.name
-  sku_name            = "Basic"
-
-  identity {
-    type = "SystemAssigned"
-  }
-
-  lifecycle {
-    ignore_changes = [tags]
+  public_network_access_enabled = true
+  sku            = "Basic"
+  enable_telemetry = false
+  managed_identities = {
+    system_assigned = true
   }
 }
 
@@ -33,7 +32,7 @@ resource "azurerm_role_definition" "start_container_role" {
 resource "azurerm_role_assignment" "aa_system_id" {
   scope              = var.resource_group.id
   role_definition_id = azurerm_role_definition.start_container_role.role_definition_resource_id
-  principal_id       = azurerm_automation_account.runner_aa.identity[0].principal_id
+  principal_id       = module.runner.system_assigned_mi_principal_id
 }
 
 data "local_file" "runner_runbook" {
@@ -45,7 +44,7 @@ resource "azurerm_automation_runbook" "runner_book" {
   name                    = "${var.resource_prefix}-runner-runbook"
   location                = var.resource_group.location
   resource_group_name     = var.resource_group.name
-  automation_account_name = azurerm_automation_account.runner_aa.name
+  automation_account_name = module.runner.automation_account_name
   log_verbose             = "true"
   log_progress            = "true"
   description             = "Runbook for starting scheduled ${var.resource_prefix} container instance"
@@ -62,7 +61,7 @@ resource "azurerm_automation_runbook" "runner_book" {
 resource "azurerm_automation_schedule" "runner_schedule" {
   name                    = "${var.resource_prefix}-runner-schedule"
   resource_group_name     = var.resource_group.name
-  automation_account_name = azurerm_automation_account.runner_aa.name
+  automation_account_name = module.runner.automation_account_name
   frequency               = var.schedule_interval
   interval                = 1
   description             = "Schedule to run ${var.resource_prefix} container instance"
@@ -71,7 +70,7 @@ resource "azurerm_automation_schedule" "runner_schedule" {
 # Assigns the schedule to the runbook
 resource "azurerm_automation_job_schedule" "runner_job_schedule" {
   resource_group_name     = var.resource_group.name
-  automation_account_name = azurerm_automation_account.runner_aa.name
+  automation_account_name = module.runner.automation_account_name
   schedule_name           = azurerm_automation_schedule.runner_schedule.name
   runbook_name            = azurerm_automation_runbook.runner_book.name
   parameters = {
