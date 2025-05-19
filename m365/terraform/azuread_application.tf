@@ -1,6 +1,4 @@
-
 # Creates the app registration, or reads an existing one, which is used by the ScubaGear container
-
 resource "azuread_application" "app" {
   count            = var.create_app ? 1 : 0
   display_name     = var.app_name
