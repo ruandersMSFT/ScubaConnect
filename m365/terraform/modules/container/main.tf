@@ -4,12 +4,13 @@ module "container_group" {
   source   = "../azurerm_container_group"
   for_each = toset(["scheduled", "adhoc"])
 
-  name                = "${var.resource_prefix}-${each.key}-container"
-  ip_address_type     = "None"
-  location            = var.resource_group.location
-  os_type             = "Windows"
-  resource_group_name = var.resource_group.name
-  restart_policy      = "Never"
+  name                    = "${var.resource_prefix}-${each.key}-container"
+  ip_address_type         = "None"
+  location                = var.resource_group.location
+  log_analytics_workspace = var.log_analytics_workspace
+  os_type                 = "Windows"
+  resource_group_name     = var.resource_group.name
+  restart_policy          = "Never"
 
   containers = [
     {
@@ -31,6 +32,4 @@ module "container_group" {
       }
     }
   ]
-
-  log_analytics_workspace = var.log_analytics_workspace
 }
