@@ -5,5 +5,5 @@ output "public_ip" {
 
 output "aci_subnet_id" {
   description = "The subnet to be used for the Azure Container Instances"
-  value       = azurerm_subnet.aci-subnet.id
+  value       = module.vnet.resource.aci_subnet_id
 }

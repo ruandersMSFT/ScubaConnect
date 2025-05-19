@@ -49,7 +49,7 @@ module "key_vault" {
   name                       = "${local.kv_prefix}${local.kv_unique_id}"
   network_acls               = local.key_vault_network_acls
   sku_name                   = "standard"
-  soft_delete_retention_days = null
+  soft_delete_retention_days = 7
   tenant_id                  = data.azurerm_client_config.current.tenant_id
 }
 

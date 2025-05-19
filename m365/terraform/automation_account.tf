@@ -52,8 +52,8 @@ resource "azurerm_role_assignment" "aa_system_id" {
 resource "azurerm_automation_job_schedule" "runner_job_schedule" {
   resource_group_name     = module.resource_group.resource.name
   automation_account_name = module.runner.automation_account_name
-  schedule_name           = "todo" # azurerm_automation_schedule.runner_schedule.name
-  runbook_name            = "todo" # azurerm_automation_runbook.runner_book.name
+  schedule_name           = "${local.prefix}-runner-schedule"
+  runbook_name            = "${local.prefix}-runner-runbook"
   parameters = {
     # must be all lowercase here: https://github.com/Azure/azure-sdk-for-go/issues/4780
     "resourcegroupname"     = module.resource_group.resource.name
