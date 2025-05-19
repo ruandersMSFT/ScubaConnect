@@ -54,15 +54,15 @@ terraform state mv module.scuba_connect.module.container.azurerm_log_analytics_s
 
 terraform state mv module.container.azurerm_log_analytics_saved_search.last_run_search azurerm_log_analytics_saved_search.last_run_search
 
-terraform state mv module.scuba_connect.module.container.azurerm_monitor_action_group.action_group module.container.azurerm_monitor_action_group.action_group
+terraform state mv module.scuba_connect.module.container.azurerm_monitor_action_group.action_group azurerm_monitor_action_group.action_group
 
-terraform state mv module.scuba_connect.module.container.azurerm_monitor_scheduled_query_rules_alert_v2.exit_alert module.container.azurerm_monitor_scheduled_query_rules_alert_v2.exit_alert
+terraform state mv module.scuba_connect.module.container.azurerm_monitor_scheduled_query_rules_alert_v2.exit_alert azurerm_monitor_scheduled_query_rules_alert_v2.exit_alert
 
 terraform state mv module.scuba_connect.module.container.azurerm_role_assignment.aa_system_id module.container.azurerm_role_assignment.aa_system_id
 
 terraform state mv module.scuba_connect.module.container.azurerm_role_assignment.app_storage_role[0] module.container.azurerm_role_assignment.app_storage_role
 
-terraform state mv module.scuba_connect.module.container.azurerm_role_assignment.law_access module.container.azurerm_role_assignment.law_access
+terraform state mv module.scuba_connect.module.container.azurerm_role_assignment.law_access azurerm_role_assignment.law_access
 
 terraform state mv module.scuba_connect.module.container.azurerm_role_definition.start_container_role module.container.azurerm_role_definition.start_container_role
 
