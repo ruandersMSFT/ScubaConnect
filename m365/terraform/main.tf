@@ -24,11 +24,9 @@ module "monitor_law" {
   resource_group_name                                = module.resource_group.name
   log_analytics_workspace_internet_ingestion_enabled = var.log_analytics_workspace_internet_ingestion_enabled
   log_analytics_workspace_internet_query_enabled     = var.log_analytics_workspace_internet_query_enabled
-  #log_analytics_workspace_sku               = "PerGB2018"
-  #log_analytics_workspace_retention_in_days = 90
+  log_analytics_workspace_sku                        = "PerGB2018"
+  log_analytics_workspace_retention_in_days          = 30
 }
-
-
 
 # Creates the app registration, or reads an existing one, which is used by the ScubaGear container
 module "app" {

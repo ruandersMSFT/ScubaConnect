@@ -1,7 +1,7 @@
 locals {
   sa_prefix    = replace(var.resource_prefix, "-", "")
   sa_unique_id = substr(replace(var.application_client_id, "-", ""), 0, 24 - length(local.sa_prefix))
-  
+
   network_rules = var.allowed_access_ips == null ? null : object({
     bypass                     = ["AzureServices"]
     default_action             = "Deny"
@@ -27,8 +27,8 @@ module "storage" {
   https_traffic_only_enabled        = true # default
   allow_nested_items_to_be_public   = false
   min_tls_version                   = "TLS1_2"
-  public_network_access_enabled = true
-  shared_access_key_enabled = true
+  public_network_access_enabled     = true
+  shared_access_key_enabled         = true
 
   network_rules = local.network_rules
 

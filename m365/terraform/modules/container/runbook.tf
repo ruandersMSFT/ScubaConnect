@@ -77,7 +77,7 @@ resource "azurerm_automation_job_schedule" "runner_job_schedule" {
   parameters = {
     # must be all lowercase here: https://github.com/Azure/azure-sdk-for-go/issues/4780
     "resourcegroupname"     = var.resource_group.name
-    "containerinstancename" = azurerm_container_group.aci["scheduled"].name
+    "containerinstancename" = module.container_group["scheduled"].resource.name
     "environment"           = var.azure_environment
   }
 }

@@ -10,6 +10,7 @@
 - Add Environment to Variable
 - Add cross_tenant_replication_enabled to azurerm_storage_account 
 - Discontinued "usgov" name ends with in favor of AzureRM Environment
+- Establish azurerm_continer_group module, elimiated hard coded values for variables
 
 Todo
 
@@ -71,9 +72,9 @@ terraform state mv module.scuba_connect.module.container.azurerm_storage_contain
 
 terraform state mv module.scuba_connect.azurerm_log_analytics_workspace.monitor_law module.monitor_law.azurerm_log_analytics_workspace.this
 
-terraform state mv 'module.scuba_connect.module.container.azurerm_container_group.aci["adhoc"]' 'module.container.azurerm_container_group.aci["adhoc"]'
+terraform state mv 'module.scuba_connect.module.container.azurerm_container_group.aci["adhoc"]' 'module.container.module.container_group["adhoc"].azurerm_container_group.this'
 
-terraform state mv 'module.scuba_connect.module.container.azurerm_container_group.aci["scheduled"]' 'module.container.azurerm_container_group.aci["scheduled"]'
+terraform state mv 'module.scuba_connect.module.container.azurerm_container_group.aci["scheduled"]' 'module.container.module.container_group["scheduled"].azurerm_container_group.this'
 
 terraform state mv 'module.scuba_connect.module.container.azurerm_storage_blob.tenants["myorg.onmicrosoft.com.yaml"]' 'module.container.azurerm_storage_blob.tenants["myorg.onmicrosoft.com.yaml"]'
 
