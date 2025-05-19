@@ -1,39 +1,3 @@
-# Network Security Group used by the VNet, allowing only 443 outbound
-# Further destination restrictions may be imposed by Azure Firewall
-module "nsg" {
-  source  = "Azure/avm-res-network-networksecuritygroup/azurerm"
-  version = "0.4.0"
-
-  name                = "${var.resource_prefix}-nsg"
-  location            = var.resource_group.location
-  resource_group_name = var.resource_group.name
-
-  security_rules = {
-    AllowInbound = {
-      name                       = "Allow-Inbound"
-      priority                   = 100
-      direction                  = "Inbound"
-      access                     = "Allow"
-      protocol                   = "Tcp"
-      source_port_range          = "*"
-      destination_port_ranges    = [80, 443]
-      source_address_prefix      = "*"
-      destination_address_prefix = "*"
-    },
-    DenyOutbound = {
-      name                       = "Deny-Inbound"
-      priority                   = 101
-      direction                  = "Inbound"
-      access                     = "Deny"
-      protocol                   = "Tcp"
-      source_port_range          = "*"
-      destination_port_range     = "*"
-      source_address_prefix      = "*"
-      destination_address_prefix = "*"
-    }
-  }
-}
-
 # VNet which hosts the ScubaGear container
 module "vnet" {
   source  = "Azure/avm-res-network-virtualnetwork/azurerm"
@@ -46,12 +10,21 @@ module "vnet" {
 
   subnets = {
     aci-subnet = {
-      name                 = "${var.resource_prefix}-aci-subnet"
-      address_prefixes     = [var.vnet.address_space]
-      service_endpoints    = ["Microsoft.Storage"]
+      name              = "${var.resource_prefix}-aci-subnet"
+      address_prefixes  = [var.vnet.address_space]
+      service_endpoints = ["Microsoft.Storage"]
       network_security_group = {
         id = module.nsg.resource_id
       }
+      
+      #todo
+# resource "azurerm_subnet_route_table_association" "apply_rt" {
+#  count          = var.firewall != null ? 1 : 0
+#  subnet_id      = module.vnet.resource.aci_subnet_id
+#  route_table_id = azurerm_route_table.route_table[0].id
+# }
+
+
       delegation = [
         {
           name = "aci-del"
