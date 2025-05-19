@@ -12,7 +12,7 @@ module "key_vault" {
   source  = "Azure/avm-res-keyvault-vault/azurerm"
   version = "0.10.0"
 
-  enable_telemetry = false
+  enable_telemetry                = false
   location                        = var.resource_group.location
   resource_group_name             = var.resource_group.name
   contacts                        = var.contact_emails

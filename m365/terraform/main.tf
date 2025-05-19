@@ -14,15 +14,15 @@ module "resource_group" {
   version = "0.2.1"
 
   enable_telemetry = false
-  name     = "${var.resource_group_name}-${var.serial_number}"
-  location = var.location
+  name             = "${var.resource_group_name}-${var.serial_number}"
+  location         = var.location
 }
 
 module "monitor_law" {
   source  = "Azure/avm-res-operationalinsights-workspace/azurerm"
   version = "0.4.2"
 
-  enable_telemetry = false
+  enable_telemetry                                   = false
   name                                               = "${local.name}-monitor-loganalytics"
   location                                           = module.resource_group.resource.location
   resource_group_name                                = module.resource_group.name
