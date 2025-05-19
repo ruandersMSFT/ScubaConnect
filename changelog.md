@@ -26,27 +26,27 @@ Todo
 
 terraform state mv module.scuba_connect.azurerm_resource_group.rg module.resource_group.azurerm_resource_group.this
 
-terraform state mv module.scuba_connect.module.app.azuread_application.app[0] module.app.azuread_application.app 
+terraform state mv module.scuba_connect.module.app.azuread_application.app[0] azuread_application.app
 
-terraform state mv module.scuba_connect.module.app.azuread_application_certificate.app_cert[0] module.app.azuread_application_certificate.app_cert[0]
+terraform state mv module.scuba_connect.module.app.azuread_application_certificate.app_cert[0] azuread_application_certificate.app_cert[0]
 
-terraform state mv module.scuba_connect.module.app.azuread_service_principal.app[0] module.app.azuread_service_principal.app[0]
+terraform state mv module.scuba_connect.module.app.azuread_service_principal.app[0] azuread_service_principal.app[0]
 
-terraform state mv module.scuba_connect.module.app.azurerm_key_vault.vault module.app.module.key_vault.azurerm_key_vault.this
+terraform state mv module.scuba_connect.module.app.azurerm_key_vault.vault module.key_vault.azurerm_key_vault.this
 
-terraform state mv module.scuba_connect.module.app.azurerm_key_vault_certificate.cert module.app.azurerm_key_vault_certificate.cert 
+terraform state mv module.scuba_connect.module.app.azurerm_key_vault_certificate.cert azurerm_key_vault_certificate.cert
 
-terraform state mv module.scuba_connect.module.app.local_file.scuba_pem_file module.app.local_file.scuba_pem_file
+terraform state mv module.scuba_connect.module.app.local_file.scuba_pem_file local_file.scuba_pem_file
 
 terraform state mv module.scuba_connect.module.app.time_rotating.cert_rotation module.app.time_rotating.cert_rotation
 
-terraform state mv module.scuba_connect.module.container.azurerm_automation_account.runner_aa module.container.module.runner.azurerm_automation_account.this
+terraform state mv module.scuba_connect.module.container.azurerm_automation_account.runner_aa module.runner.azurerm_automation_account.this
 
-terraform state mv module.scuba_connect.module.container.azurerm_automation_job_schedule.runner_job_schedule module.container.azurerm_automation_job_schedule.runner_job_schedule
+terraform state mv module.scuba_connect.module.container.azurerm_automation_job_schedule.runner_job_schedule azurerm_automation_job_schedule.runner_job_schedule
 
-terraform state mv module.scuba_connect.module.container.azurerm_automation_runbook.runner_book 'module.container.module.runner.azurerm_automation_runbook.this["runbook"]'
+terraform state mv module.scuba_connect.module.container.azurerm_automation_runbook.runner_book 'module.runner.azurerm_automation_runbook.this["runbook"]'
 
-terraform state mv module.scuba_connect.module.container.azurerm_automation_schedule.runner_schedule 'module.container.module.runner.azurerm_automation_schedule.this["runner_schedule"]'
+terraform state mv module.scuba_connect.module.container.azurerm_automation_schedule.runner_schedule 'module.runner.azurerm_automation_schedule.this["runner_schedule"]'
 
 terraform state mv module.scuba_connect.module.container.azurerm_log_analytics_saved_search.container_search azurerm_log_analytics_saved_search.container_search
 
@@ -58,28 +58,33 @@ terraform state mv module.scuba_connect.module.container.azurerm_monitor_action_
 
 terraform state mv module.scuba_connect.module.container.azurerm_monitor_scheduled_query_rules_alert_v2.exit_alert azurerm_monitor_scheduled_query_rules_alert_v2.exit_alert
 
-terraform state mv module.scuba_connect.module.container.azurerm_role_assignment.aa_system_id module.container.azurerm_role_assignment.aa_system_id
+terraform state mv module.scuba_connect.module.container.azurerm_role_assignment.aa_system_id azurerm_role_assignment.aa_system_id
 
-terraform state mv module.scuba_connect.module.container.azurerm_role_assignment.app_storage_role[0] module.container.azurerm_role_assignment.app_storage_role
+terraform state mv module.scuba_connect.module.container.azurerm_role_assignment.app_storage_role[0] azurerm_role_assignment.app_storage_role
 
 terraform state mv module.scuba_connect.module.container.azurerm_role_assignment.law_access azurerm_role_assignment.law_access
 
-terraform state mv module.scuba_connect.module.container.azurerm_role_definition.start_container_role module.container.azurerm_role_definition.start_container_role
+terraform state mv module.scuba_connect.module.container.azurerm_role_definition.start_container_role azurerm_role_definition.start_container_role
 
-terraform state mv module.scuba_connect.module.container.azurerm_storage_account.storage[0] module.container.module.storage[0].azurerm_storage_account.this
+terraform state mv module.scuba_connect.module.container.azurerm_storage_account.storage[0] module.storage[0].azurerm_storage_account.this
 
-terraform state mv module.scuba_connect.module.container.azurerm_storage_container.input[0] module.container.azurerm_storage_container.input[0]
+terraform state mv module.scuba_connect.module.container.azurerm_storage_container.input[0] azurerm_storage_container.input[0]
 
-terraform state mv module.scuba_connect.module.container.azurerm_storage_container.output[0] module.container.azurerm_storage_container.output[0]
+terraform state mv module.scuba_connect.module.container.azurerm_storage_container.output[0] azurerm_storage_container.output[0]
 
-terraform state mv module.scuba_connect.azurerm_log_analytics_workspace.monitor_law module.monitor_law.azurerm_log_analytics_workspace.this
+terraform state mv module.scuba_connect.azurerm_log_analytics_workspace.log_analytics_workspace module.log_analytics_workspace.azurerm_log_analytics_workspace.this
 
-terraform state mv 'module.scuba_connect.module.container.azurerm_container_group.aci["adhoc"]' 'module.container.module.container_group["adhoc"].azurerm_container_group.this'
+terraform state mv 'module.scuba_connect.module.container.azurerm_container_group.aci["adhoc"]' 'module.container_group["adhoc"].azurerm_container_group.this'
 
-terraform state mv 'module.scuba_connect.module.container.azurerm_container_group.aci["scheduled"]' 'module.container.module.container_group["scheduled"].azurerm_container_group.this'
+terraform state mv 'module.scuba_connect.module.container.azurerm_container_group.aci["scheduled"]' 'module.container_group["scheduled"].azurerm_container_group.this'
 
-terraform state mv 'module.scuba_connect.module.container.azurerm_storage_blob.tenants["myorg.onmicrosoft.com.yaml"]' 'module.container.azurerm_storage_blob.tenants["myorg.onmicrosoft.com.yaml"]'
+terraform state mv 'module.scuba_connect.module.container.azurerm_storage_blob.tenants["myorg.onmicrosoft.com.yaml"]' 'azurerm_storage_blob.tenants["myorg.onmicrosoft.com.yaml"]'
 
-terraform import -var-file='example.tfvars' module.app.azurerm_key_vault_certificate_contacts.contact 'https://scubaruanders-kv-d3503fa.vault.azure.net/certificates/contacts'
+terraform state mv 'module.app.time_rotating.cert_rotation' 'time_rotating.cert_rotation'
 
-terraform import -var-file='example.tfvars' 'module.app.module.key_vault.azurerm_key_vault_access_policy.this["app"]' '/subscriptions/070cfebd-3e63-42a5-ba50-58de1db7496e/resourceGroups/myresourcegroup-01/providers/Microsoft.KeyVault/vaults/scubaruanders-kv-d3503fa/objectId/75a159ce-bab1-4f4e-aade-d9545f994a03'
+
+terraform import -var-file='example.tfvars' module.key_vault.azurerm_key_vault_certificate_contacts.this[0] 'https://scubaruanders-kv-d3503fa.vault.azure.net/certificates/contacts'
+
+terraform import -var-file='example.tfvars' 'module.key_vault.azurerm_key_vault_access_policy.this["app"]' '/subscriptions/070cfebd-3e63-42a5-ba50-58de1db7496e/resourceGroups/myresourcegroup-01/providers/Microsoft.KeyVault/vaults/scubaruanders-kv-d3503fa/objectId/75a159ce-bab1-4f4e-aade-d9545f994a03'
+
+

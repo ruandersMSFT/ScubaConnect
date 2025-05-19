@@ -1,9 +1,9 @@
-module "monitor_law" {
+module "log_analytics_workspace" {
   source  = "Azure/avm-res-operationalinsights-workspace/azurerm"
   version = "0.4.2"
 
   enable_telemetry                                   = false
-  name                                               = "${local.name}-monitor-loganalytics"
+  name                                               = "${local.prefix}-monitor-loganalytics"
   location                                           = module.resource_group.resource.location
   resource_group_name                                = module.resource_group.name
   log_analytics_workspace_internet_ingestion_enabled = var.log_analytics_workspace_internet_ingestion_enabled
@@ -14,10 +14,10 @@ module "monitor_law" {
 
 resource "azurerm_log_analytics_saved_search" "last_run_search" {
   name                       = "lastRunSearch"
-  log_analytics_workspace_id = module.monitor_law.resource_id
+  log_analytics_workspace_id = module.log_analytics_workspace.resource_id
 
-  category     = "${local.name} Container"
-  display_name = "${local.name} Last Run Output"
+  category     = "${local.prefix} Container"
+  display_name = "${local.prefix} Last Run Output"
   query        = <<-QUERY
     let e = toscalar(ContainerEvent_CL | where Message contains "pulling image" | summarize max(TimeGenerated)); 
     union ContainerEvent_CL, ContainerInstanceLog_CL
@@ -29,10 +29,10 @@ resource "azurerm_log_analytics_saved_search" "last_run_search" {
 
 resource "azurerm_log_analytics_saved_search" "container_search" {
   name                       = "containerSearch"
-  log_analytics_workspace_id = module.monitor_law.resource_id
+  log_analytics_workspace_id = module.log_analytics_workspace.resource_id
 
-  category     = "${local.name} Container"
-  display_name = "${local.name} Container Logs (7d)"
+  category     = "${local.prefix} Container"
+  display_name = "${local.prefix} Container Logs (7d)"
   query        = <<-QUERY
     union ContainerEvent_CL, ContainerInstanceLog_CL
     | where TimeGenerated > ago(7d)
@@ -41,9 +41,9 @@ resource "azurerm_log_analytics_saved_search" "container_search" {
 }
 
 resource "azurerm_monitor_action_group" "action_group" {
-  name                = "${local.name} Container Alerts"
+  name                = "${local.prefix} Container Alerts"
   resource_group_name = module.resource_group.name
-  short_name          = substr(local.name, 0, 12)
+  short_name          = substr(local.prefix, 0, 12)
   dynamic "email_receiver" {
     for_each = var.contact_emails
     content {
@@ -60,7 +60,7 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "exit_alert" {
 
   evaluation_frequency = "PT15M"
   window_duration      = "PT15M"
-  scopes               = [module.monitor_law.resource_id]
+  scopes               = [module.log_analytics_workspace.resource_id]
   severity             = 2
   criteria {
     query                   = <<-QUERY
@@ -72,8 +72,8 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "exit_alert" {
     operator                = "GreaterThanOrEqual"
   }
 
-  description  = "Alerts when ${local.name} container has non-zero exit code."
-  display_name = "${local.name} Container Exit Code Alert"
+  description  = "Alerts when ${local.prefix} container has non-zero exit code."
+  display_name = "${local.prefix} Container Exit Code Alert"
 
   action {
     action_groups = [azurerm_monitor_action_group.action_group.id]
@@ -84,7 +84,7 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "exit_alert" {
 }
 
 resource "azurerm_role_assignment" "law_access" {
-  scope                = module.monitor_law.resource_id
+  scope                = module.log_analytics_workspace.resource_id
   role_definition_name = "Reader"
   principal_id         = azurerm_monitor_scheduled_query_rules_alert_v2.exit_alert.identity[0].principal_id
 }

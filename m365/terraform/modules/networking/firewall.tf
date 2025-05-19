@@ -16,10 +16,6 @@ resource "azurerm_route_table" "route_table" {
   location            = var.resource_group.location
   resource_group_name = var.resource_group.name
 
-  lifecycle {
-    ignore_changes = [tags]
-  }
-
   route {
     name                   = "${var.resource_prefix}-quad0"
     address_prefix         = "0.0.0.0/0"

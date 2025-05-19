@@ -1,14 +1,5 @@
-data "azuread_application_published_app_ids" "well_known" {}
 
-data "azuread_service_principal" "msgraph" {
-  client_id = data.azuread_application_published_app_ids.well_known.result.MicrosoftGraph
-}
-data "azuread_service_principal" "o365exchange" {
-  client_id = data.azuread_application_published_app_ids.well_known.result.Office365ExchangeOnline
-}
-data "azuread_service_principal" "sharepoint" {
-  client_id = data.azuread_application_published_app_ids.well_known.result.Office365SharePointOnline
-}
+# Creates the app registration, or reads an existing one, which is used by the ScubaGear container
 
 resource "azuread_application" "app" {
   count            = var.create_app ? 1 : 0
@@ -16,9 +7,8 @@ resource "azuread_application" "app" {
   logo_image       = filebase64(var.image_path)
   sign_in_audience = var.app_multi_tenant ? "AzureADMultipleOrgs" : "AzureADMyOrg"
   web {
-    redirect_uris = ["${var.azure_portal_endpoint}/#view/Microsoft_AAD_IAM/StartboardApplicationsMenuBlade/~/AppAppsPreview"]
+    redirect_uris = ["${local.azure_portal_endpoint}/#view/Microsoft_AAD_IAM/StartboardApplicationsMenuBlade/~/AppAppsPreview"]
   }
-
 
   required_resource_access {
     resource_app_id = data.azuread_application_published_app_ids.well_known.result.MicrosoftGraph
@@ -73,7 +63,6 @@ resource "azuread_application" "app" {
         type = "Role"
       }
     }
-
   }
 
   required_resource_access {

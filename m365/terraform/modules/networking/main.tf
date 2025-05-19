@@ -28,10 +28,6 @@ resource "azurerm_network_security_group" "nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
-
-  lifecycle {
-    ignore_changes = [tags]
-  }
 }
 
 # VNet which hosts the ScubaGear container
@@ -40,10 +36,6 @@ resource "azurerm_virtual_network" "vnet" {
   location            = var.resource_group.location
   resource_group_name = var.resource_group.name
   address_space       = [var.vnet.address_space]
-
-  lifecycle {
-    ignore_changes = [tags]
-  }
 }
 
 # Subnet which hosts the ScubaGear container, configured for Azure Container Instances

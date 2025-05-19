@@ -1,9 +1,9 @@
 locals {
-  kv_prefix    = "${var.resource_prefix}-kv-"
-  kv_unique_id = substr(replace((var.create_app ? azuread_application.app[0].client_id : data.azuread_application.app[0].client_id), "-", ""), 0, 24 - length(local.kv_prefix))
+  kv_prefix    = "${local.prefix}-kv-"
+  kv_unique_id = substr(replace(local.app_client_id, "-", ""), 0, 24 - length(local.kv_prefix))
 
-  key_vault_network_acls = var.allowed_access_ips == null ? null : object({
-    ip_rules = var.allowed_access_ips
+  key_vault_network_acls = local.ip_rules == null ? null : object({
+    ip_rules = local.ip_rules
   })
 }
 
@@ -13,8 +13,8 @@ module "key_vault" {
   version = "0.10.0"
 
   enable_telemetry                = false
-  location                        = var.resource_group.location
-  resource_group_name             = var.resource_group.name
+  location                        = module.resource_group.resource.location
+  resource_group_name             = module.resource_group.resource.name
   contacts                        = var.contact_emails
   enabled_for_deployment          = false
   enabled_for_disk_encryption     = false
@@ -22,7 +22,7 @@ module "key_vault" {
   legacy_access_policies_enabled  = true
   legacy_access_policies = {
     app = {
-      object_id = var.object_id
+      object_id = data.azuread_client_config.current.object_id
       certificate_permissions = [
         "Create",
         "Delete",
@@ -48,9 +48,9 @@ module "key_vault" {
   }
   name                       = "${local.kv_prefix}${local.kv_unique_id}"
   network_acls               = local.key_vault_network_acls
-  sku_name                   = var.key_vault_sku_name
-  soft_delete_retention_days = var.key_vault_soft_delete_retention_days
-  tenant_id                  = var.tenant_id
+  sku_name                   = "standard"
+  soft_delete_retention_days = null
+  tenant_id                  = data.azurerm_client_config.current.tenant_id
 }
 
 # note this requires terraform to be run regularly
@@ -61,7 +61,7 @@ resource "time_rotating" "cert_rotation" {
 # Generate the app registration certificate
 resource "azurerm_key_vault_certificate" "cert" {
   # Name change forces recreating certificate
-  name         = "${var.resource_prefix}-app-cert-${formatdate("YYYY-MM-DD", time_rotating.cert_rotation.rfc3339)}"
+  name         = "${local.prefix}-app-cert-${formatdate("YYYY-MM-DD", time_rotating.cert_rotation.rfc3339)}"
   key_vault_id = module.key_vault.resource_id
 
   certificate_policy {
