@@ -16,15 +16,9 @@ module "vnet" {
       network_security_group = {
         id = module.nsg.resource_id
       }
-      
-      #todo
-# resource "azurerm_subnet_route_table_association" "apply_rt" {
-#  count          = var.firewall != null ? 1 : 0
-#  subnet_id      = module.vnet.resource.aci_subnet_id
-#  route_table_id = azurerm_route_table.route_table[0].id
-# }
-
-
+      route_table = {
+        id = var.firewall == null ? null : module.route_table.resource_id
+      }
       delegation = [
         {
           name = "aci-del"
