@@ -11,34 +11,6 @@ resource "azurerm_monitor_action_group" "action_group" {
   }
 }
 
-resource "azurerm_log_analytics_saved_search" "last_run_search" {
-  name                       = "lastRunSearch"
-  log_analytics_workspace_id = var.log_analytics_workspace.id
-
-  category     = "${var.resource_prefix} Container"
-  display_name = "${var.resource_prefix} Last Run Output"
-  query        = <<-QUERY
-    let e = toscalar(ContainerEvent_CL | where Message contains "pulling image" | summarize max(TimeGenerated)); 
-    union ContainerEvent_CL, ContainerInstanceLog_CL
-    | where TimeGenerated > e
-    | project TimeGenerated, ContainerGroup_s, Type, Message
-    | order by TimeGenerated asc
-    QUERY
-}
-
-resource "azurerm_log_analytics_saved_search" "container_search" {
-  name                       = "containerSearch"
-  log_analytics_workspace_id = var.log_analytics_workspace.id
-
-  category     = "${var.resource_prefix} Container"
-  display_name = "${var.resource_prefix} Container Logs (7d)"
-  query        = <<-QUERY
-    union ContainerEvent_CL, ContainerInstanceLog_CL
-    | where TimeGenerated > ago(7d)
-    | order by TimeGenerated
-    QUERY
-}
-
 resource "azurerm_monitor_scheduled_query_rules_alert_v2" "exit_alert" {
   name                = "exit-code-alert"
   location            = var.resource_group.location

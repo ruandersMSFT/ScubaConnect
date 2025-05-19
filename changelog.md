@@ -48,9 +48,11 @@ terraform state mv module.scuba_connect.module.container.azurerm_automation_runb
 
 terraform state mv module.scuba_connect.module.container.azurerm_automation_schedule.runner_schedule 'module.container.module.runner.azurerm_automation_schedule.this["runner_schedule"]'
 
-terraform state mv module.scuba_connect.module.container.azurerm_log_analytics_saved_search.container_search module.container.azurerm_log_analytics_saved_search.container_search
+terraform state mv module.scuba_connect.module.container.azurerm_log_analytics_saved_search.container_search azurerm_log_analytics_saved_search.container_search
 
-terraform state mv module.scuba_connect.module.container.azurerm_log_analytics_saved_search.last_run_search module.container.azurerm_log_analytics_saved_search.last_run_search
+terraform state mv module.scuba_connect.module.container.azurerm_log_analytics_saved_search.last_run_search azurerm_log_analytics_saved_search.last_run_search
+
+terraform state mv module.container.azurerm_log_analytics_saved_search.last_run_search azurerm_log_analytics_saved_search.last_run_search
 
 terraform state mv module.scuba_connect.module.container.azurerm_monitor_action_group.action_group module.container.azurerm_monitor_action_group.action_group
 

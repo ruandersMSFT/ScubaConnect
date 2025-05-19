@@ -1,13 +1,3 @@
-data "azuread_client_config" "current" {}
-data "azurerm_client_config" "current" {}
-
-locals {
-  name                            = var.prefix_override != null ? var.prefix_override : replace(lower(var.app_name), " ", "-")
-  azure_active_directory_endpoint = var.terraform_azurerm_environment == "public" ? "https://login.microsoftonline.com" : var.terraform_azurerm_environment == "usgovernment" ? "https://login.microsoftonline.us" : null
-  azure_environment               = var.terraform_azurerm_environment == "public" ? "AzureCloud" : var.terraform_azurerm_environment == "usgovernment" ? "AzureUSGovernment" : null
-  azure_portal_endpoint           = var.terraform_azurerm_environment == "public" ? "https://portal.azure.com" : var.terraform_azurerm_environment == "usgovernment" ? "https://portal.azure.us" : null
-}
-
 # Azure Resource Group that contains most resources
 module "resource_group" {
   source  = "Azure/avm-res-resources-resourcegroup/azurerm"
@@ -16,20 +6,6 @@ module "resource_group" {
   enable_telemetry = false
   name             = "${var.resource_group_name}-${var.serial_number}"
   location         = var.location
-}
-
-module "monitor_law" {
-  source  = "Azure/avm-res-operationalinsights-workspace/azurerm"
-  version = "0.4.2"
-
-  enable_telemetry                                   = false
-  name                                               = "${local.name}-monitor-loganalytics"
-  location                                           = module.resource_group.resource.location
-  resource_group_name                                = module.resource_group.name
-  log_analytics_workspace_internet_ingestion_enabled = var.log_analytics_workspace_internet_ingestion_enabled
-  log_analytics_workspace_internet_query_enabled     = var.log_analytics_workspace_internet_query_enabled
-  log_analytics_workspace_sku                        = "PerGB2018"
-  log_analytics_workspace_retention_in_days          = 30
 }
 
 # Creates the app registration, or reads an existing one, which is used by the ScubaGear container
