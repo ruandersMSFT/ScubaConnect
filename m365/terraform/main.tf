@@ -19,8 +19,10 @@ module "resource_group" {
 }
 
 module "monitor_law" {
-  source = "./modules/azurerm_log_analytics_workspace"
+  source  = "Azure/avm-res-operationalinsights-workspace/azurerm"
+  version = "0.4.2"
 
+  enable_telemetry = false
   name                                               = "${local.name}-monitor-loganalytics"
   location                                           = module.resource_group.resource.location
   resource_group_name                                = module.resource_group.name
