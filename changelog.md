@@ -82,9 +82,15 @@ terraform state mv 'module.scuba_connect.module.container.azurerm_storage_blob.t
 
 terraform state mv 'module.app.time_rotating.cert_rotation' 'time_rotating.cert_rotation'
 
+terraform state mv module.container.module.runner.random_uuid.this module.runner.random_uuid.this
 
 terraform import -var-file='example.tfvars' module.key_vault.azurerm_key_vault_certificate_contacts.this[0] 'https://scubaruanders-kv-d3503fa.vault.azure.net/certificates/contacts'
 
 terraform import -var-file='example.tfvars' 'module.key_vault.azurerm_key_vault_access_policy.this["app"]' '/subscriptions/070cfebd-3e63-42a5-ba50-58de1db7496e/resourceGroups/myresourcegroup-01/providers/Microsoft.KeyVault/vaults/scubaruanders-kv-d3503fa/objectId/75a159ce-bab1-4f4e-aade-d9545f994a03'
 
 
+terraform state mv module.app.module.key_vault.time_sleep.wait_for_rbac_before_contact_operations[0] module.key_vault.time_sleep.wait_for_rbac_before_contact_operations[0]
+
+terraform state mv module.app.module.key_vault.azurerm_key_vault_certificate_contacts.this[0] module.key_vault.azurerm_key_vault_certificate_contacts.this[0]
+
+terraform state mv 'module.app.module.key_vault.azurerm_key_vault_access_policy.this["app"]' 'module.key_vault.azurerm_key_vault_access_policy.this["app"]'
